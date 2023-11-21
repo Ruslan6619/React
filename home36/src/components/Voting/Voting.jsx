@@ -26,6 +26,7 @@ export default class Voting extends Component {
 
 
     handleVote = (id) => {
+
         this.setState((prevState) => {
             const currentVotes = prevState.votes[id] || 0;
             return {
@@ -36,6 +37,7 @@ export default class Voting extends Component {
             };
         });
     }
+
 
 
     handleShowResults = () => {
@@ -60,6 +62,10 @@ export default class Voting extends Component {
                     votes: initialVotes,
                 });
             });
+
+
+
+        this.handleVote = this.handleVote.bind(this); // добавьте эту строку
     }
 
 
@@ -111,3 +117,5 @@ export default class Voting extends Component {
         )
     }
 }
+
+

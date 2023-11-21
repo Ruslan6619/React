@@ -1,6 +1,5 @@
-import { Component } from 'react'
+import React, { Component } from 'react';
 import { string,} from 'prop-types';
-
 import './SmileCard.scss';
 
 export default class SmileCard extends Component {
@@ -10,7 +9,7 @@ export default class SmileCard extends Component {
   }
 
   render() {
-    
+
     const { smile, title, description } = this.props;
     return (
       <div className='SmileCard' onClick={this.handleClick}>
@@ -36,3 +35,14 @@ SmileCard.defaultProps = {
   title: 'TITLE',
   description: 'DESCRIPTION',
 };
+
+
+
+
+
+
+
+
+
+
+
