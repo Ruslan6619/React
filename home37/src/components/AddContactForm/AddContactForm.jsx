@@ -1,76 +1,81 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { useFormik } from 'formik';
+import * as Yup from 'yup';
 import { useNavigate } from 'react-router-dom';
 
 const AddContactForm = ({ onSaveContact, onCancel }) => {
-    const [name, setName] = useState('');
-    const [surname, setSurname] = useState('');
-    const [phone, setPhone] = useState('');
-    const [validationErrors, setValidationErrors] = useState({});
     const navigate = useNavigate();
 
-    const handleSave = () => {
-        if (!name || !surname || !phone) {
-            setValidationErrors({
-                name: !name,
-                surname: !surname,
-                phone: !phone,
-            });
-            return;
-        }
+    const formik = useFormik({
+        initialValues: {
+            name: '',
+            surname: '',
+            phone: '',
+        },
+        validationSchema: Yup.object({
+            name: Yup.string().required('Пожалуйста, введите имя'),
+            surname: Yup.string().required('Пожалуйста, введите фамилию'),
+            phone: Yup.string().required('Пожалуйста, введите номер телефона'),
+        }),
+        onSubmit: (values, { resetForm }) => {
+            onSaveContact(values);
+            onCancel();
+            navigate('/contacts');
+            resetForm();
+        },
+    });
 
-        setValidationErrors({});
-
-        onSaveContact({ name, surname, phone });
-        onCancel();
-        navigate('/contacts');
-        setName('');
-        setSurname('');
-        setPhone('');
-    };
-
-    const handleCancel = () => {
-        setValidationErrors({});
-        onCancel();
-        navigate('/contacts');
-    };
 
     return (
         <div>
             <h2>Добавить контакт</h2>
-            <form>
+            <form onSubmit={formik.handleSubmit}>
                 <label>
                     Имя:
                     <input
                         type="text"
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                        style={{ borderColor: validationErrors.name ? 'red' : '' }}
+                        name="name"
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        value={formik.values.name}
+                        className={formik.errors.name && formik.touched.name ? 'error' : ''}
                     />
                 </label>
+                {formik.errors.name && formik.touched.name && <div className="error-text">{formik.errors.name}</div>}
+
                 <label>
                     Фамилия:
                     <input
                         type="text"
-                        value={surname}
-                        onChange={(e) => setSurname(e.target.value)}
-                        style={{ borderColor: validationErrors.surname ? 'red' : '' }}
+                        name="surname"
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        value={formik.values.surname}
+                        className={formik.errors.surname && formik.touched.surname ? 'error' : ''}
                     />
                 </label>
+                {formik.errors.surname && formik.touched.surname && (
+                    <div className="error-text">{formik.errors.surname}</div>
+                )}
+
                 <label>
                     Телефон:
                     <input
                         type="text"
-                        value={phone}
-                        onChange={(e) => setPhone(e.target.value)}
-                        style={{ borderColor: validationErrors.phone ? 'red' : '' }}
+                        name="phone"
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        value={formik.values.phone}
+                        className={formik.errors.phone && formik.touched.phone ? 'error' : ''}
                     />
                 </label>
-                <button type="button" onClick={handleSave}>
-                    Сохранить
-                </button>
-                <button type="button" onClick={handleCancel}>
+                {formik.errors.phone && formik.touched.phone && <div className="error-text">{formik.errors.phone}</div>}
+
+                <button type="submit">Сохранить</button>
+                <button type="button" onClick={() => { onCancel(); navigate('/contacts'); }}>
                     Отменить
                 </button>
+
             </form>
         </div>
     );
