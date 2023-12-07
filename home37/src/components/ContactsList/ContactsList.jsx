@@ -21,7 +21,7 @@ const ContactsList = ({ contacts, onDeleteContact }) => {
 
     return (
         <div>
-            <h2>Список контактов</h2>
+            <h2>Список контактів</h2>
             <table>
                 <thead>
                 <tr>
@@ -42,16 +42,25 @@ const ContactsList = ({ contacts, onDeleteContact }) => {
                         </td>
                     </tr>
                 ))}
+
+
+
                 </tbody>
             </table>
 
             {isModalOpen && (
-                <div className="modal">
+                <div className="modal" key={`modal-${selectedContact.id}`}>
                     <div className="modal-content">
                         <h2>Вы уверены, что хотите удалить этот контакт?</h2>
-                        <p>{selectedContact && `${selectedContact.name} ${selectedContact.surname}`}</p>
-                        <button onClick={handleDelete}>Да, удалить</button>
-                        <button onClick={closeModal}>Отмена</button>
+                        <p key={`contactName-${selectedContact.id}`}>
+                            {selectedContact && `${selectedContact.name} ${selectedContact.surname}`}
+                        </p>
+                        <button key={`deleteButton-${selectedContact.id}`} onClick={handleDelete}>
+                            Да, удалить
+                        </button>
+                        <button key={`cancelButton-${selectedContact.id}`} onClick={closeModal}>
+                            Отменить
+                        </button>
                     </div>
                 </div>
             )}

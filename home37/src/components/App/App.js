@@ -1,55 +1,36 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import './App.css';
 import ContactsList from '../ContactsList/ContactsList';
 import AddContactForm from '../AddContactForm/AddContactForm';
 import { Route, Routes, Link, Navigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { addContact, deleteContact, fetchContacts } from '../Redux/actions';
 
 function App() {
-    const [yourContactsArray, setYourContactsArray] = useState([]);
-    const [showContacts, setShowContacts] = useState(false);
+    const dispatch = useDispatch();
+    const yourContactsArray = useSelector((state) => state.contacts);
 
     useEffect(() => {
-        const storedContacts = JSON.parse(localStorage.getItem('contacts')) || [];
-        setYourContactsArray(storedContacts);
-
         const fetchData = async () => {
             try {
                 const response = await fetch('https://jsonplaceholder.typicode.com/users');
                 const data = await response.json();
 
-                const formattedData = data.map(user => {
-                    const [name, surname] = user.name.split(' ');
-                    return {
-                        id: user.id,
-                        name,
-                        surname,
-                        phone: user.phone,
-                    };
-                });
-
-                setYourContactsArray(formattedData);
-                localStorage.setItem('contacts', JSON.stringify(formattedData));
+                dispatch(fetchContacts(data));
             } catch (error) {
-                console.error('Ошибка загрузки данных:', error);
+                console.error('Error fetching data:', error);
             }
         };
 
         fetchData();
-    }, []);
+    }, [dispatch]);
 
     const handleDeleteContact = (contactId) => {
-        const updatedContacts = yourContactsArray.filter(contact => contact.id !== contactId);
-        setYourContactsArray(updatedContacts);
-        localStorage.setItem('contacts', JSON.stringify(updatedContacts));
+        dispatch(deleteContact(contactId));
     };
 
     const handleSaveContact = (newContact) => {
-        setYourContactsArray([...yourContactsArray, newContact]);
-        setShowContacts(true);
-    };
-
-    const handleCancel = () => {
-        setShowContacts(true);
+        dispatch(addContact(newContact));
     };
 
     return (
@@ -58,7 +39,7 @@ function App() {
             <nav>
                 <ul>
                     <li>
-                        <Link to="/contacts" onClick={() => setShowContacts(true)}>Список контактов</Link>
+                        <Link to="/contacts">Список контактов</Link>
                     </li>
                     <li>
                         <Link to="/add-contact">Добавить контакт</Link>
@@ -66,21 +47,14 @@ function App() {
                 </ul>
             </nav>
             <Routes>
-                <Route path="/*" element={<Navigate to="/contacts" />} />
-                {showContacts && (
-                    <Route
-                        path="/contacts"
-                        element={<ContactsList contacts={yourContactsArray} onDeleteContact={handleDeleteContact} />}
-                    />
-                )}
+                <Route path="/" element={<Navigate to="/contacts" />} />
+                <Route
+                    path="/contacts"
+                    element={<ContactsList contacts={yourContactsArray} onDeleteContact={handleDeleteContact} />}
+                />
                 <Route
                     path="/add-contact"
-                    element={
-                        <AddContactForm
-                            onSaveContact={handleSaveContact}
-                            onCancel={handleCancel}
-                        />
-                    }
+                    element={<AddContactForm onSaveContact={handleSaveContact} />}
                 />
             </Routes>
         </div>
