@@ -21,7 +21,7 @@ const ContactsList = ({ contacts, onDeleteContact }) => {
 
     return (
         <div>
-            <h2>Список контактів</h2>
+            <h2>Список контактов</h2>
             <table>
                 <thead>
                 <tr>

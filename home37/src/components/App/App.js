@@ -4,7 +4,8 @@ import ContactsList from '../ContactsList/ContactsList';
 import AddContactForm from '../AddContactForm/AddContactForm';
 import { Route, Routes, Link, Navigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { addContact, deleteContact, fetchContacts } from '../Redux/actions';
+import { addContact, deleteContact, fetchContacts } from '../../Redux/actions';
+import axios from 'axios';
 
 function App() {
     const dispatch = useDispatch();
@@ -13,8 +14,8 @@ function App() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetch('https://jsonplaceholder.typicode.com/users');
-                const data = await response.json();
+                const response = await axios.get('https://jsonplaceholder.typicode.com/users');
+                const data = response.data;
 
                 dispatch(fetchContacts(data));
             } catch (error) {

@@ -1,9 +1,9 @@
 import React from 'react';
 import { useFormik } from 'formik';
-import * as Yup from 'yup';
 import { useDispatch } from 'react-redux';
-import { addContact } from '../Redux/actions';
+import { addContact } from '../../Redux/actions';
 import { useNavigate } from 'react-router-dom';
+import { string, object } from 'yup';
 
 const AddContactForm = () => {
     const dispatch = useDispatch();
@@ -15,10 +15,10 @@ const AddContactForm = () => {
             surname: '',
             phone: '',
         },
-        validationSchema: Yup.object({
-            name: Yup.string().required('Пожалуйста, введите имя'),
-            surname: Yup.string().required('Пожалуйста, введите фамилию'),
-            phone: Yup.string().required('Пожалуйста, введите номер телефона'),
+        validationSchema: object({
+            name: string().required('Пожалуйста, введите имя'),
+            surname: string().required('Пожалуйста, введите фамилию'),
+            phone: string().required('Пожалуйста, введите номер телефона'),
         }),
         onSubmit: (values, { resetForm }) => {
             dispatch(addContact(values));
