@@ -9,7 +9,8 @@ import axios from 'axios';
 
 function App() {
     const dispatch = useDispatch();
-    const yourContactsArray = useSelector((state) => state.contacts);
+    const yourContactsArray = useSelector((state) => state.contacts.contacts);
+
 
     useEffect(() => {
         const fetchData = async () => {
@@ -53,10 +54,7 @@ function App() {
                     path="/contacts"
                     element={<ContactsList contacts={yourContactsArray} onDeleteContact={handleDeleteContact} />}
                 />
-                <Route
-                    path="/add-contact"
-                    element={<AddContactForm onSaveContact={handleSaveContact} />}
-                />
+                <Route path="/add-contact" element={<AddContactForm onSaveContact={handleSaveContact} />} />
             </Routes>
         </div>
     );

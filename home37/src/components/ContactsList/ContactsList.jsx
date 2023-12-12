@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 
 const ContactsList = ({ contacts, onDeleteContact }) => {
+    const contactsArray = Array.isArray(contacts) ? contacts : [];
     const [selectedContact, setSelectedContact] = useState(null);
     const [isModalOpen, setModalOpen] = useState(false);
 
@@ -32,7 +33,7 @@ const ContactsList = ({ contacts, onDeleteContact }) => {
                 </tr>
                 </thead>
                 <tbody>
-                {contacts.map((contact, index) => (
+                {contactsArray.map((contact, index) => (
                     <tr key={index}>
                         <td>{contact.name}</td>
                         <td>{contact.surname}</td>
@@ -42,9 +43,6 @@ const ContactsList = ({ contacts, onDeleteContact }) => {
                         </td>
                     </tr>
                 ))}
-
-
-
                 </tbody>
             </table>
 
@@ -63,8 +61,7 @@ const ContactsList = ({ contacts, onDeleteContact }) => {
                         </button>
                     </div>
                 </div>
-            )}
-        </div>
+            )}        </div>
     );
 };
 
