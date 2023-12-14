@@ -1,7 +1,7 @@
 import React from 'react';
 import { useFormik } from 'formik';
 import { useDispatch } from 'react-redux';
-import { addContact } from '../../Redux/actions';
+import { addContact } from '../../Redux/contactsSlice';
 import { useNavigate } from 'react-router-dom';
 import { string, object } from 'yup';
 

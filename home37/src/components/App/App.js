@@ -4,7 +4,7 @@ import ContactsList from '../ContactsList/ContactsList';
 import AddContactForm from '../AddContactForm/AddContactForm';
 import { Route, Routes, Link, Navigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { addContact, deleteContact, fetchContacts } from '../../Redux/actions';
+import { addContact, deleteContact, fetchContacts } from '../../Redux/contactsSlice';
 import axios from 'axios';
 
 function App() {
