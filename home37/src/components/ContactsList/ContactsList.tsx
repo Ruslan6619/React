@@ -1,11 +1,16 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
+import Contact from '../../types/types';
 
-const ContactsList = ({ contacts, onDeleteContact }) => {
-    const contactsArray = Array.isArray(contacts) ? contacts : [];
-    const [selectedContact, setSelectedContact] = useState(null);
-    const [isModalOpen, setModalOpen] = useState(false);
+interface ContactsListProps {
+    contacts: Contact[];
+    onDeleteContact: (contactId: number) => void;
+}
 
-    const openModal = (contact) => {
+const ContactsList: React.FC<ContactsListProps> = ({ contacts, onDeleteContact }) => {
+    const [selectedContact, setSelectedContact] = useState<Contact | null>(null);
+    const [isModalOpen, setModalOpen] = useState<boolean>(false);
+
+    const openModal = (contact: Contact) => {
         setSelectedContact(contact);
         setModalOpen(true);
     };
@@ -16,7 +21,7 @@ const ContactsList = ({ contacts, onDeleteContact }) => {
     };
 
     const handleDelete = () => {
-        onDeleteContact(selectedContact.id);
+        onDeleteContact(selectedContact!.id);
         closeModal();
     };
 
@@ -33,7 +38,7 @@ const ContactsList = ({ contacts, onDeleteContact }) => {
                 </tr>
                 </thead>
                 <tbody>
-                {contactsArray.map((contact, index) => (
+                {contacts.map((contact, index) => (
                     <tr key={index}>
                         <td>{contact.name}</td>
                         <td>{contact.surname}</td>
@@ -47,21 +52,22 @@ const ContactsList = ({ contacts, onDeleteContact }) => {
             </table>
 
             {isModalOpen && (
-                <div className="modal" key={`modal-${selectedContact.id}`}>
+                <div className="modal" key={`modal-${selectedContact?.id}`}>
                     <div className="modal-content">
                         <h2>Вы уверены, что хотите удалить этот контакт?</h2>
-                        <p key={`contactName-${selectedContact.id}`}>
+                        <p key={`contactName-${selectedContact?.id}`}>
                             {selectedContact && `${selectedContact.name} ${selectedContact.surname}`}
                         </p>
-                        <button key={`deleteButton-${selectedContact.id}`} onClick={handleDelete}>
+                        <button key={`deleteButton-${selectedContact?.id}`} onClick={handleDelete}>
                             Да, удалить
                         </button>
-                        <button key={`cancelButton-${selectedContact.id}`} onClick={closeModal}>
+                        <button key={`cancelButton-${selectedContact?.id}`} onClick={closeModal}>
                             Отменить
                         </button>
                     </div>
                 </div>
-            )}        </div>
+            )}
+        </div>
     );
 };
 

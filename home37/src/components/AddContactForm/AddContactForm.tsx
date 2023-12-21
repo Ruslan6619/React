@@ -5,11 +5,17 @@ import { addContact } from '../../Redux/contactsSlice';
 import { useNavigate } from 'react-router-dom';
 import { string, object } from 'yup';
 
-const AddContactForm = () => {
+interface ContactFormValues {
+    name: string;
+    surname: string;
+    phone: string;
+}
+
+const AddContactForm: React.FC = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    const formik = useFormik({
+    const formik = useFormik<ContactFormValues>({
         initialValues: {
             name: '',
             surname: '',
@@ -20,11 +26,12 @@ const AddContactForm = () => {
             surname: string().required('Пожалуйста, введите фамилию'),
             phone: string().required('Пожалуйста, введите номер телефона'),
         }),
-        onSubmit: (values, { resetForm }) => {
+        onSubmit: (values) => {
             dispatch(addContact(values));
-            resetForm();
-            navigate('/contacts');
+            formik.resetForm();
+            navigate('/contacts', { replace: true });
         },
+
     });
 
     return (
@@ -71,8 +78,12 @@ const AddContactForm = () => {
                     <div className="error-text">{formik.errors.phone}</div>
                 )}
 
-                <button type="submit" key="saveButton">Сохранить</button>
-                <button type="button" onClick={() => navigate('/contacts')}>Отмена</button>
+                <button type="submit" key="saveButton">
+                    Сохранить
+                </button>
+                <button type="button" onClick={() => navigate('/contacts')}>
+                    Отмена
+                </button>
             </form>
         </div>
     );

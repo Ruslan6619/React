@@ -1,21 +1,44 @@
+
 import React, { useEffect } from 'react';
 import './App.css';
 import ContactsList from '../ContactsList/ContactsList';
 import AddContactForm from '../AddContactForm/AddContactForm';
-import { Route, Routes, Link, Navigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { addContact, deleteContact, fetchContacts } from '../../Redux/contactsSlice';
 import axios from 'axios';
+import { Route, Routes, Link as ReactRouterLink, Navigate, useNavigate } from 'react-router-dom';
 
-function App() {
+interface Contact {
+    name: string;
+    surname: string;
+    phone: string;
+}
+
+
+type RootState = {
+    contacts: {
+        contacts: Contact[];
+    };
+};
+
+const App: React.FC = () => {
     const dispatch = useDispatch();
-    const yourContactsArray = useSelector((state) => state.contacts.contacts);
+    const yourContactsArray = useSelector((state: RootState) => state.contacts.contacts);
 
+
+
+    const handleDeleteContact = (contactId: number) => {
+        dispatch(deleteContact(contactId));
+    };
+
+    const handleSaveContact = (newContact: Contact) => {
+        dispatch(addContact(newContact));
+    };
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get('https://jsonplaceholder.typicode.com/users');
+                const response = await axios.get<Contact[]>('https://jsonplaceholder.typicode.com/users');
                 const data = response.data;
 
                 dispatch(fetchContacts(data));
@@ -27,24 +50,16 @@ function App() {
         fetchData();
     }, [dispatch]);
 
-    const handleDeleteContact = (contactId) => {
-        dispatch(deleteContact(contactId));
-    };
-
-    const handleSaveContact = (newContact) => {
-        dispatch(addContact(newContact));
-    };
-
     return (
         <div className="App">
             <h1>Телефонная книга</h1>
             <nav>
                 <ul>
                     <li>
-                        <Link to="/contacts">Список контактов</Link>
+                        <ReactRouterLink to="/contacts">Список контактов</ReactRouterLink>
                     </li>
                     <li>
-                        <Link to="/add-contact">Добавить контакт</Link>
+                        <ReactRouterLink to="/add-contact">Добавить контакт</ReactRouterLink>
                     </li>
                 </ul>
             </nav>
@@ -58,6 +73,6 @@ function App() {
             </Routes>
         </div>
     );
-}
+};
 
 export default App;
